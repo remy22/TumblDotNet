@@ -70,6 +70,11 @@ namespace TumblDotNet
             return GetTokenFromParams(response.Content);
         }
 
+        public String BuildAuthorizeUrl(Token requestToken)
+        {
+            return "http://www.tumblr.com/oauth/authorize?oauth_token=" + requestToken.UserToken;
+        }
+
         //TODO: Un-steal this
         private Token GetTokenFromParams(string urlParams)
         {

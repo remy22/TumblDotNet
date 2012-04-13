@@ -17,7 +17,11 @@ namespace ConsoleTester
             var client = new TumblrClient(TumblrConsumerKey, TumblrConsumerSecret);
 
             var token = client.GetRequestToken();
-            
+
+            var redirectUrl = client.BuildAuthorizeUrl(token);
+
+            Console.WriteLine(redirectUrl);
+
             Console.ReadLine();
         }
     }
