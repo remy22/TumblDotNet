@@ -16,13 +16,23 @@ namespace ConsoleTester
 
             var client = new TumblrClient(TumblrConsumerKey, TumblrConsumerSecret);
 
-            var token = client.GetRequestToken();
+            var reqToken = client.GetRequestToken();
 
-            var redirectUrl = client.BuildAuthorizeUrl(token);
+            var redirectUrl = client.BuildAuthorizeUrl(reqToken);
 
             Console.WriteLine(redirectUrl);
+            
+            Console.Write("Enter verifier please:");
+            var verifier = Console.ReadLine();
 
-            Console.ReadLine();
+            var accessToken = client.GetAccessToken(reqToken, verifier);
+            
+            client = new TumblrClient(TumblrConsumerKey,TumblrConsumerSecret,accessToken.UserToken,accessToken.UserSecret);
+
+            //try a request 
+            var info = client.GetUserInfo();
+            Console.WriteLine(info.Name);
+
         }
     }
 }

@@ -99,6 +99,23 @@ namespace TumblDotNet
             return new Token(token,secret);
         }
 
+        public Token GetAccessToken(Token requestToken, string verifier)
+        {
+            var client = new RestClient();
+
+            if(string.IsNullOrEmpty(verifier))
+                throw new ArgumentException("Invalid verifier");
+
+            client.Authenticator = OAuth1Authenticator.ForAccessToken(ConsumerKey, ConsumerSecret, requestToken.UserToken, requestToken.UserSecret,verifier);
+            
+
+            var request = new RestRequest(ACCESS_TOKEN_URL, Method.GET);
+            var response = client.Execute(request);
+
+            return GetTokenFromParams(response.Content);
+
+        }
+
         #endregion
 
         #region Guard property for tokens
