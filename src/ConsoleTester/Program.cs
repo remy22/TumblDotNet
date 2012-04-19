@@ -10,11 +10,14 @@ namespace ConsoleTester
     {
         public const string TumblrConsumerKey = "t1ecRlHNgK9tfwRojPUwHrZwxyYUvp8LngbmZipinr3Yd7gbok";
         public const string TumblrConsumerSecret = "bVKDKK38CobZXKlJhZF2AObh8cvkFeuOp0sAMW8LJtvNq99mBW";
+        public const string UserToken = "oeJhgY9ynQ8tnSfsPPKOzfXPms2vwlHyVEVCy93m1gx0DUjDoP";
+        public const string UserSecret = "5tHDrmQ8wrspI4G0vptalehMS8oZQy5y8kcvwXzqWtQ7LE8tyC";
 
         static void Main(string[] args)
         {
 
-            var reqToken = TumblrClient.GetRequestToken(TumblrConsumerKey,TumblrConsumerSecret);
+#region OAuth Authentication
+            /*var reqToken = TumblrClient.GetRequestToken(TumblrConsumerKey,TumblrConsumerSecret);
 
             var redirectUrl = TumblrClient.BuildAuthorizeUrl(reqToken);
 
@@ -24,13 +27,17 @@ namespace ConsoleTester
             var verifier = Console.ReadLine();
 
             var accessToken = TumblrClient.GetAccessToken(TumblrConsumerKey,TumblrConsumerSecret,reqToken, verifier);
-            
-            var client = new TumblrClient(TumblrConsumerKey,TumblrConsumerSecret,accessToken.UserToken,accessToken.UserSecret);
+            */
+#endregion
+
+            var client = new TumblrClient(TumblrConsumerKey,TumblrConsumerSecret,UserToken,UserSecret);
 
             //try a request 
-            var info = client.GetUserInfo();
-            Console.WriteLine(info.Name);
+            var userInfo = client.GetUserInfo();
+            Console.WriteLine(userInfo.Blogs[0].Name);
 
+            var blogInfo = client.GetBlogInfo("rcknight.tumblr.com");
+            Console.ReadLine();
         }
     }
 }

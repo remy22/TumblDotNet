@@ -129,12 +129,33 @@ namespace TumblDotNet
             var client = GetRestClient();
             
             var request = new RestRequest("/user/info/", Method.POST);
-            request.RootElement = "response";
+            
+            var userInfoResponse = client.Execute<TumblrResponse<TumblrUserResponse>>(request);
 
-            var userInfoResponse = client.Execute<TumblrUserResponse>(request);
+            return userInfoResponse.Data.Response.User;
 
-            return userInfoResponse.Data.User;
+        }
 
+        #endregion
+
+        #region blog methods
+
+        public TumblrBlogInfo GetBlogInfo(string blogHostName)
+        {
+
+            if(String.IsNullOrEmpty(blogHostName))
+                throw new ArgumentException("invalid blog host name");
+
+            var client = GetUnAuthenticatedRestClient();
+
+            var resource = string.Format("/blog/{0}/info",blogHostName);
+
+            var request = new RestRequest(resource);
+            request.AddParameter(new Parameter(){Name = "api_key",Type = ParameterType.GetOrPost, Value=ConsumerKey});
+            
+            var response = client.Execute<TumblrResponse<TumblrBlogResponse>>(request);
+
+            return response.Data.Response.Blog;
         }
 
         #endregion
@@ -148,6 +169,14 @@ namespace TumblDotNet
             client.AddHandler("*", new JsonDeserializer());
             
             client.Authenticator = GetAuthenticator();
+            return client;
+        }
+
+        private RestClient GetUnAuthenticatedRestClient()
+        {
+            RestClient client = new RestClient(API_BASE);
+            client.ClearHandlers();
+            client.AddHandler("*", new JsonDeserializer());
             return client;
         }
 

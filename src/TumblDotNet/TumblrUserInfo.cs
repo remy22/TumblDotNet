@@ -32,7 +32,7 @@ namespace TumblDotNet
         /// <summary>
         /// Blogs which the user has permission to post to
         /// </summary>
-        public List<TumblrBlogInfo> Blogs { get; set; }
+        public List<TumblrUserBlogInfo> Blogs { get; set; }
 
         
     }
