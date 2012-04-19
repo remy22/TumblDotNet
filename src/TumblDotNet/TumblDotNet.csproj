@@ -43,13 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OAuthUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequestToken.cs" />
-    <Compile Include="TumblrBlogInfo.cs" />
+    <Compile Include="Authentication\RequestToken.cs" />
+    <Compile Include="Models\TumblrBlogInfo.cs" />
+    <Compile Include="Responses\TumblrBlogResponse.cs" />
     <Compile Include="TumblrClient.cs" />
-    <Compile Include="TumblrUserInfo.cs" />
-    <Compile Include="TumblrUserResponse.cs" />
+    <Compile Include="Models\TumblrFollower.cs" />
+    <Compile Include="Responses\TumblrFollowersResponse.cs" />
+    <Compile Include="Models\TumblrMetaData.cs" />
+    <Compile Include="Responses\TumblrResponse.cs" />
+    <Compile Include="Models\TumblrUserBlogInfo.cs" />
+    <Compile Include="Models\TumblrUserInfo.cs" />
+    <Compile Include="Responses\TumblrUserResponse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

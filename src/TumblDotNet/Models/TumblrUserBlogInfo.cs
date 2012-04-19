@@ -1,4 +1,4 @@
-namespace TumblDotNet
+namespace TumblDotNet.Models
 {
     /// <summary>
     /// Tumblr blog info returned for a users blog listing

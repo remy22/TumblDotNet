@@ -37,6 +37,12 @@ namespace ConsoleTester
             Console.WriteLine(userInfo.Blogs[0].Name);
 
             var blogInfo = client.GetBlogInfo("rcknight.tumblr.com");
+
+            Console.WriteLine(blogInfo.Title);
+
+            var avatarUrl = client.GetAvatarUrl("rcknight.tumblr.com", 512);
+            Console.WriteLine(avatarUrl);
+            
             Console.ReadLine();
         }
     }

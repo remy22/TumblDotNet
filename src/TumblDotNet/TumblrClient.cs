@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
+using TumblDotNet.Authentication;
+using TumblDotNet.Models;
+using TumblDotNet.Responses;
 
 namespace TumblDotNet
 {
@@ -156,6 +160,23 @@ namespace TumblDotNet
             var response = client.Execute<TumblrResponse<TumblrBlogResponse>>(request);
 
             return response.Data.Response.Blog;
+        }
+
+
+        public string GetAvatarUrl(string blogHostName, int size=64)
+        {
+            List<int> supportedSizes = new List<int>() {16, 24, 30, 40, 48, 64, 96, 128, 512};
+            if(!supportedSizes.Contains(size))
+            {
+                size = 64;
+            }
+
+            if (String.IsNullOrEmpty(blogHostName))
+                throw new ArgumentException("invalid blog host name");
+
+            var resource = string.Format("{0}/blog/{1}/avatar/{2}",API_BASE, blogHostName,size);
+
+            return resource;
         }
 
         #endregion

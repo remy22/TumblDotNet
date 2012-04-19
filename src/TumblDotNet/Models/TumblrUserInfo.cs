@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TumblDotNet
+namespace TumblDotNet.Models
 {
     public class TumblrUserInfo
     {

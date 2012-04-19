@@ -1,4 +1,4 @@
-namespace TumblDotNet
+namespace TumblDotNet.Authentication
 {
     public class Token
     {
