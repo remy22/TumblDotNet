@@ -117,6 +117,7 @@ namespace TumblDotNet
             
 
             var request = new RestRequest(ACCESS_TOKEN_URL, Method.GET);
+            request.AddParameter("oauth_verifier", verifier);
             var response = client.Execute(request);
 
             return GetTokenFromParams(response.Content);
@@ -163,10 +164,10 @@ namespace TumblDotNet
         }
 
 
-        public string GetAvatarUrl(string blogHostName, int size=64)
+        public string GetAvatarUrl(string blogHostName, int size = 64)
         {
             List<int> supportedSizes = new List<int>() {16, 24, 30, 40, 48, 64, 96, 128, 512};
-            if(!supportedSizes.Contains(size))
+            if (!supportedSizes.Contains(size))
             {
                 size = 64;
             }
@@ -174,10 +175,50 @@ namespace TumblDotNet
             if (String.IsNullOrEmpty(blogHostName))
                 throw new ArgumentException("invalid blog host name");
 
-            var resource = string.Format("{0}/blog/{1}/avatar/{2}",API_BASE, blogHostName,size);
+            var resource = string.Format("{0}/blog/{1}/avatar/{2}", API_BASE, blogHostName, size);
 
             return resource;
         }
+
+        public TumblrFollowers GetBlogFollowers(string blogHostName, int limit=20, int offset = 0)
+        {
+
+            if (String.IsNullOrEmpty(blogHostName))
+                throw new ArgumentException("invalid blog host name");
+
+            var client = GetRestClient();
+
+            var resource = string.Format("/blog/{0}/followers", blogHostName);
+
+            var request = new RestRequest(resource,Method.GET);
+            request.AddParameter("limit", limit);
+            request.AddParameter("offset", offset);
+
+            var response = client.Execute<TumblrResponse<TumblrFollowersResponse>>(request);
+
+            var ret = new TumblrFollowers();
+            ret.Total_Users = response.Data.Response.Total_Users;
+            ret.Users = response.Data.Response.Users;
+
+            return ret;
+        }
+
+        public void GetBlogQueue(string blogHostName)
+        {
+            if (String.IsNullOrEmpty(blogHostName))
+                throw new ArgumentException("invalid blog host name");
+
+            var client = GetRestClient();
+
+            var resource = string.Format("/blog/{0}/posts/queue", blogHostName);
+
+            var request = new RestRequest(resource, Method.GET);
+            
+            var response = client.Execute(request);
+
+            Console.WriteLine(response.StatusCode);
+        }
+
 
         #endregion
 

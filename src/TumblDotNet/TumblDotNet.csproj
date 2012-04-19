@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\TumblrFollowers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Authentication\RequestToken.cs" />
     <Compile Include="Models\TumblrBlogInfo.cs" />

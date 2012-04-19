@@ -10,8 +10,8 @@ namespace ConsoleTester
     {
         public const string TumblrConsumerKey = "t1ecRlHNgK9tfwRojPUwHrZwxyYUvp8LngbmZipinr3Yd7gbok";
         public const string TumblrConsumerSecret = "bVKDKK38CobZXKlJhZF2AObh8cvkFeuOp0sAMW8LJtvNq99mBW";
-        public const string UserToken = "oeJhgY9ynQ8tnSfsPPKOzfXPms2vwlHyVEVCy93m1gx0DUjDoP";
-        public const string UserSecret = "5tHDrmQ8wrspI4G0vptalehMS8oZQy5y8kcvwXzqWtQ7LE8tyC";
+        public const string UserToken = "sYM9rfA8IbyJdkYyap8DQmhRlq46pupJSNJT0nciC9mFQ3nMjQ";
+        public const string UserSecret = "iAwgAi7okUtaX24i1H1eiVtWKkKqCU4kdAjDAaFcKcBSBNh3sb";
 
         static void Main(string[] args)
         {
@@ -27,10 +27,17 @@ namespace ConsoleTester
             var verifier = Console.ReadLine();
 
             var accessToken = TumblrClient.GetAccessToken(TumblrConsumerKey,TumblrConsumerSecret,reqToken, verifier);
-            */
+            Console.WriteLine("User secret: " + accessToken.UserSecret);
+            Console.WriteLine("User token: " + accessToken.UserToken);*/
 #endregion
 
             var client = new TumblrClient(TumblrConsumerKey,TumblrConsumerSecret,UserToken,UserSecret);
+
+            var followers = client.GetBlogFollowers("rcknight.tumblr.com", 0, 12);
+
+            Console.WriteLine(followers.Total_Users);
+            Console.WriteLine(followers.Users[0].Name);
+
 
             //try a request 
             var userInfo = client.GetUserInfo();
@@ -42,7 +49,7 @@ namespace ConsoleTester
 
             var avatarUrl = client.GetAvatarUrl("rcknight.tumblr.com", 512);
             Console.WriteLine(avatarUrl);
-            
+
             Console.ReadLine();
         }
     }
