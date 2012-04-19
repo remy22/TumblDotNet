@@ -56,27 +56,30 @@ namespace TumblDotNet
             UserSecret = userSecret;
         }
 
+        public TumblrClient(string consumerKey, string consumerSecret, Token accessToken) : this(consumerKey, consumerSecret, accessToken.UserToken, accessToken.UserSecret)
+        {}
+        
         #endregion
 
         #region OAuth Setup
 
-        public Token GetRequestToken()
+        public static Token GetRequestToken(string consumerKey, string consumerSecret)
         {
             var client = new RestClient();
-            client.Authenticator = OAuth1Authenticator.ForRequestToken(ConsumerKey, ConsumerSecret);
+            client.Authenticator = OAuth1Authenticator.ForRequestToken(consumerKey, consumerSecret);
             var request = new RestRequest(REQUEST_TOKEN_URL,Method.GET);
             var response = client.Execute(request);
 
             return GetTokenFromParams(response.Content);
         }
 
-        public String BuildAuthorizeUrl(Token requestToken)
+        public static String BuildAuthorizeUrl(Token requestToken)
         {
             return "http://www.tumblr.com/oauth/authorize?oauth_token=" + requestToken.UserToken;
         }
 
         //TODO: Un-steal this
-        private Token GetTokenFromParams(string urlParams)
+        private static Token GetTokenFromParams(string urlParams)
         {
 
             string secret = "";
@@ -99,14 +102,14 @@ namespace TumblDotNet
             return new Token(token,secret);
         }
 
-        public Token GetAccessToken(Token requestToken, string verifier)
+        public static Token GetAccessToken(string consumerKey, string consumerSecret, Token requestToken, string verifier)
         {
             var client = new RestClient();
 
             if(string.IsNullOrEmpty(verifier))
                 throw new ArgumentException("Invalid verifier");
 
-            client.Authenticator = OAuth1Authenticator.ForAccessToken(ConsumerKey, ConsumerSecret, requestToken.UserToken, requestToken.UserSecret,verifier);
+            client.Authenticator = OAuth1Authenticator.ForAccessToken(consumerKey, consumerSecret, requestToken.UserToken, requestToken.UserSecret,verifier);
             
 
             var request = new RestRequest(ACCESS_TOKEN_URL, Method.GET);
@@ -114,19 +117,6 @@ namespace TumblDotNet
 
             return GetTokenFromParams(response.Content);
 
-        }
-
-        #endregion
-
-        #region Guard property for tokens
-
-        private bool ReadyForUse
-        {
-            get
-            {
-                return (!string.IsNullOrEmpty(ConsumerKey) && !string.IsNullOrEmpty(ConsumerSecret) &&
-                        !string.IsNullOrEmpty(UserToken) && !string.IsNullOrEmpty(UserSecret));
-            }
         }
 
         #endregion

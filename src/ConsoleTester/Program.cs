@@ -14,20 +14,18 @@ namespace ConsoleTester
         static void Main(string[] args)
         {
 
-            var client = new TumblrClient(TumblrConsumerKey, TumblrConsumerSecret);
+            var reqToken = TumblrClient.GetRequestToken(TumblrConsumerKey,TumblrConsumerSecret);
 
-            var reqToken = client.GetRequestToken();
-
-            var redirectUrl = client.BuildAuthorizeUrl(reqToken);
+            var redirectUrl = TumblrClient.BuildAuthorizeUrl(reqToken);
 
             Console.WriteLine(redirectUrl);
             
             Console.Write("Enter verifier please:");
             var verifier = Console.ReadLine();
 
-            var accessToken = client.GetAccessToken(reqToken, verifier);
+            var accessToken = TumblrClient.GetAccessToken(TumblrConsumerKey,TumblrConsumerSecret,reqToken, verifier);
             
-            client = new TumblrClient(TumblrConsumerKey,TumblrConsumerSecret,accessToken.UserToken,accessToken.UserSecret);
+            var client = new TumblrClient(TumblrConsumerKey,TumblrConsumerSecret,accessToken.UserToken,accessToken.UserSecret);
 
             //try a request 
             var info = client.GetUserInfo();
