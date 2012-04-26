@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace TumblDotNet.Models
 {
+
     public class TumblrUserInfo
     {
 

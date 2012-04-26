@@ -12,9 +12,6 @@ namespace TumblDotNet
     public class TumblrClient
     {
         private const string API_BASE = "http://api.tumblr.com/v2";
-        private const string REQUEST_TOKEN_URL = "http://www.tumblr.com/oauth/request_token";
-        private const string AUTHORIZE_URL = "http://www.tumblr.com/oauth/authorize";
-        private const string ACCESS_TOKEN_URL = "http://www.tumblr.com/oauth/access_token";
 
         #region Tokens
 
@@ -65,67 +62,6 @@ namespace TumblDotNet
         
         #endregion
 
-        #region OAuth Setup
-
-        public static Token GetRequestToken(string consumerKey, string consumerSecret)
-        {
-            var client = new RestClient();
-            client.Authenticator = OAuth1Authenticator.ForRequestToken(consumerKey, consumerSecret);
-            var request = new RestRequest(REQUEST_TOKEN_URL,Method.GET);
-            var response = client.Execute(request);
-
-            return GetTokenFromParams(response.Content);
-        }
-
-        public static String BuildAuthorizeUrl(Token requestToken)
-        {
-            return "http://www.tumblr.com/oauth/authorize?oauth_token=" + requestToken.UserToken;
-        }
-
-        //TODO: Un-steal this
-        private static Token GetTokenFromParams(string urlParams)
-        {
-
-            string secret = "";
-            string token = "";
-            //TODO - Make this not suck
-            var parameters = urlParams.Split('&');
-
-            foreach (var parameter in parameters)
-            {
-                if (parameter.Split('=')[0] == "oauth_token_secret")
-                {
-                    secret = parameter.Split('=')[1];
-                }
-                else if (parameter.Split('=')[0] == "oauth_token")
-                {
-                    token = parameter.Split('=')[1];
-                }
-            }
-
-            return new Token(token,secret);
-        }
-
-        public static Token GetAccessToken(string consumerKey, string consumerSecret, Token requestToken, string verifier)
-        {
-            var client = new RestClient();
-
-            if(string.IsNullOrEmpty(verifier))
-                throw new ArgumentException("Invalid verifier");
-
-            client.Authenticator = OAuth1Authenticator.ForAccessToken(consumerKey, consumerSecret, requestToken.UserToken, requestToken.UserSecret,verifier);
-            
-
-            var request = new RestRequest(ACCESS_TOKEN_URL, Method.GET);
-            request.AddParameter("oauth_verifier", verifier);
-            var response = client.Execute(request);
-
-            return GetTokenFromParams(response.Content);
-
-        }
-
-        #endregion
-
         #region user methods
 
         public TumblrUserInfo GetUserInfo()
@@ -147,7 +83,6 @@ namespace TumblDotNet
 
         public TumblrBlogInfo GetBlogInfo(string blogHostName)
         {
-
             if(String.IsNullOrEmpty(blogHostName))
                 throw new ArgumentException("invalid blog host name");
 
@@ -163,8 +98,7 @@ namespace TumblDotNet
             return response.Data.Response.Blog;
         }
 
-
-        public string GetAvatarUrl(string blogHostName, int size = 64)
+        public string GetAvatarUrl(string blogHostName, int size=64)
         {
             List<int> supportedSizes = new List<int>() {16, 24, 30, 40, 48, 64, 96, 128, 512};
             if (!supportedSizes.Contains(size))
@@ -219,7 +153,65 @@ namespace TumblDotNet
             Console.WriteLine(response.StatusCode);
         }
 
+        //TODO: Write some overloads for this
+        public TumblrPostsResponse GetPosts(string blogHostName, PostFormat format = PostFormat.Html, string filteredTag = "", bool includeReblogs = false, bool includeNotes = false, int offset = 0, int limit = 20, PostType postType = PostType.All )
+        {
+            if (String.IsNullOrEmpty(blogHostName))
+                throw new ArgumentException("invalid blog host name");
 
+            var client = GetUnAuthenticatedRestClient();
+
+            string typeUrl = "";
+
+            switch (postType)
+            {
+                    case PostType.Text:
+                        typeUrl = "/text";
+                        break;
+                    case PostType.Quote:
+                        typeUrl = "/quote";
+                        break;
+                    case PostType.Link:
+                        typeUrl = "/link";
+                        break;
+                    case PostType.Audio:
+                        typeUrl = "/audio";
+                        break;
+                    case PostType.Video:
+                        typeUrl = "/video";
+                        break;
+                    case PostType.Answer:
+                        typeUrl = "/answer";
+                        break;
+                    case PostType.Photo:
+                        typeUrl = "/photo";
+                        break;
+                    default:
+                        typeUrl = "";
+                        break;
+
+            }
+                
+            //post type on end of url for this one
+            var resource = string.Format("/blog/{0}/posts{1}", blogHostName, typeUrl);
+
+            var request = new RestRequest(resource);
+            request.AddParameter(new Parameter() { Name = "api_key", Type = ParameterType.GetOrPost, Value = ConsumerKey });
+            request.AddParameter("limit", limit);
+            request.AddParameter("offset", offset);
+
+            if(filteredTag != "")
+                request.AddParameter("tag", filteredTag);
+
+            request.AddParameter("reblog_info", includeReblogs);
+            request.AddParameter("notes_info", includeNotes);
+
+            var response = client.Execute<TumblrResponse<TumblrPostsResponse>>(request);
+
+            //TODO: Take this catchall response and return a specific post type? 
+            return response.Data.Response;
+
+        }
         #endregion
 
         #region Rest Setup
@@ -248,13 +240,8 @@ namespace TumblDotNet
         }
 
         #endregion
-
     }
 
-    public class OAuthRequestTokenResponse
-    {
-        public string oauth_token { get; set; }
-        public string oauth_token_secret { get; set; }
-        public bool callback_confirmed { get; set; }
-    }
+    
+
 }
