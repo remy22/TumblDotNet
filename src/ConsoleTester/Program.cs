@@ -47,8 +47,9 @@ namespace ConsoleTester
 
             var avatarUrl = client.GetAvatarUrl("danleech.com", 512);
 
-            var posts = client.GetPosts("danleech.com",postType:PostType.Link);
+            var posts = client.GetBlogPosts("danleech.com",postType:PostType.Link);
 
+            var drafts = client.GetDrafts("rcknight.tumblr.com");
 
             Console.WriteLine(avatarUrl);
 

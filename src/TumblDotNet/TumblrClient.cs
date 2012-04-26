@@ -158,7 +158,7 @@ namespace TumblDotNet
         }*/
 
         //TODO: Write some overloads for this
-        public List<TumblrPost> GetPosts(string blogHostName, PostFormat format = PostFormat.Html, string filteredTag = "", bool includeReblogs = false, bool includeNotes = false, int offset = 0, int limit = 20, PostType postType = PostType.All )
+        public List<TumblrPost> GetBlogPosts(string blogHostName, PostFormat format = PostFormat.Html, string filteredTag = "", bool includeReblogs = false, bool includeNotes = false, int offset = 0, int limit = 20, PostType postType = PostType.All )
         {
             if (String.IsNullOrEmpty(blogHostName))
                 throw new ArgumentException("invalid blog host name");
@@ -213,11 +213,20 @@ namespace TumblDotNet
 
             var response = client.Execute<TumblrResponse<TumblrPostsResponse>>(request);
 
+            return ConvertPosts(response.Data.Response.Posts);
+            
+        }
+
+
+        #region post converter
+
+        public static List<TumblrPost> ConvertPosts(List<TumblrPostResponse> posts)
+        {
             List<TumblrPost> convertedPosts = new List<TumblrPost>();
 
-            foreach(var post in response.Data.Response.Posts)
+            foreach (var post in posts)
             {
-                switch(post.Type)
+                switch (post.Type)
                 {
                     case PostType.Text:
                         convertedPosts.Add(post.ToTextPost());
@@ -248,9 +257,41 @@ namespace TumblDotNet
             }
 
             return convertedPosts;
-            
         }
 
+        #endregion
+
+        private List<TumblrPost> GetPrivatePosts(string blogHostName, string postType)
+        {
+            if (String.IsNullOrEmpty(blogHostName))
+                throw new ArgumentException("invalid blog host name");
+
+            var client = GetRestClient();
+
+            //post type on end of url for this one
+            var resource = string.Format("/blog/{0}/posts/{1}", blogHostName, postType);
+
+            var request = new RestRequest(resource);
+
+            var response = client.Execute<TumblrResponse<TumblrPostsResponse>>(request);
+
+            return ConvertPosts(response.Data.Response.Posts);
+        }
+
+        public List<TumblrPost> GetQueue(string blogHostName)
+        {
+            return GetPrivatePosts(blogHostName, "queue");
+        }
+
+        public List<TumblrPost> GetDrafts(string blogHostName)
+        {
+            return GetPrivatePosts(blogHostName, "draft");
+        }
+
+        public List<TumblrPost> GetSubmissions(string blogHostName)
+        {
+            return GetPrivatePosts(blogHostName, "submission");
+        }
 
         #endregion
 

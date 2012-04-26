@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Xml;
+using RestSharp;
 using TumblDotNet.Models;
 
 namespace TumblDotNet.Responses
 {
     public class TumblrPostResponse
     {
-
         #region Conversion methods
 
         private void FillTumblrPostFields(TumblrPost post)
@@ -99,13 +102,15 @@ namespace TumblDotNet.Responses
 
             //fill specific fields
             ret.Caption = Caption;
-            ret.Player = Player;
+            //ret.Player = Player;
             ret.Plays = Plays;
             ret.Album_Art = Album_Art;
             ret.Artist = Artist;
             ret.Track_Name = Track_Name;
             ret.Track_Number = Track_Number;
             ret.Year = Year;
+
+            Console.WriteLine(Player.ToString());
 
             return ret;
         }
@@ -117,6 +122,12 @@ namespace TumblDotNet.Responses
 
             //fill specific fields
             ret.Caption = Caption;
+
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof (List<EmbeddableObject>));
+
+            var obj = (List<EmbeddableObject>)ser.ReadObject(new XmlTextReader(new StringReader(Player)));
+
+            Console.WriteLine(Player.ToString());
 
             //TODO: Fix this
             ret.Player = new List<EmbeddableObject>();
@@ -142,6 +153,7 @@ namespace TumblDotNet.Responses
         #endregion
 
         #region Shared stuff
+
         public string Blog_Name { get; set; }
         public long Id { get; set; }
         public string Post_Url { get; set; }
@@ -186,6 +198,11 @@ namespace TumblDotNet.Responses
         /// The full post body
         /// </summary>
         public string Body { get; set; }
+
+        /// <summary>
+        /// The HTML for embedding the audio player
+        /// </summary>
+        public String Player { get; set; }
 
         #endregion
 
@@ -246,11 +263,6 @@ namespace TumblDotNet.Responses
         #endregion
 
         #region Audio post stuff
-
-        /// <summary>
-        /// The HTML for embedding the audio player
-        /// </summary>
-        public string Player { get; set; }
 
         /// <summary>
         /// The number of times the audio post has been played
@@ -315,6 +327,5 @@ namespace TumblDotNet.Responses
         public string Answer { get; set; }
 
         #endregion
-
     }
 }
