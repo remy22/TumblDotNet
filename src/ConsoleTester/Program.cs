@@ -33,10 +33,7 @@ namespace ConsoleTester
 
             var client = new TumblrClient(TumblrConsumerKey,TumblrConsumerSecret,UserToken,UserSecret);
 
-            var followers = client.GetBlogFollowers("rcknight.tumblr.com", 0, 12);
-
-            Console.WriteLine(followers.Total_Users);
-            Console.WriteLine(followers.Users[0].Name);
+            //var followers = client.GetBlogFollowers("rcknight.tumblr.com", 0, 12);
 
 
             //try a request 

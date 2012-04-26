@@ -114,6 +114,8 @@ namespace TumblDotNet
             return resource;
         }
 
+
+        //TODO: Work out why this returns unauthenticated!
         public TumblrFollowers GetBlogFollowers(string blogHostName, int limit=20, int offset = 0)
         {
 
@@ -137,6 +139,7 @@ namespace TumblDotNet
             return ret;
         }
 
+        /*
         public void GetBlogQueue(string blogHostName)
         {
             if (String.IsNullOrEmpty(blogHostName))
@@ -151,7 +154,7 @@ namespace TumblDotNet
             var response = client.Execute(request);
 
             Console.WriteLine(response.StatusCode);
-        }
+        }*/
 
         //TODO: Write some overloads for this
         public TumblrPostsResponse GetPosts(string blogHostName, PostFormat format = PostFormat.Html, string filteredTag = "", bool includeReblogs = false, bool includeNotes = false, int offset = 0, int limit = 20, PostType postType = PostType.All )
@@ -196,6 +199,9 @@ namespace TumblDotNet
             var resource = string.Format("/blog/{0}/posts{1}", blogHostName, typeUrl);
 
             var request = new RestRequest(resource);
+
+            
+            
             request.AddParameter(new Parameter() { Name = "api_key", Type = ParameterType.GetOrPost, Value = ConsumerKey });
             request.AddParameter("limit", limit);
             request.AddParameter("offset", offset);

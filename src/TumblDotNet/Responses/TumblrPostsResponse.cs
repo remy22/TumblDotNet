@@ -7,7 +7,7 @@ namespace TumblDotNet.Responses
     {
         public TumblrBlogInfo Blog { get; set; }
 
-        public List<TumblrPost> Posts { get; set; }
+        public List<TumblrPostResponse> Posts { get; set; }
 
         public long TotalPosts { get; set; }
     }

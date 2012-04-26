@@ -43,9 +43,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\DialogueLine.cs" />
+    <Compile Include="Models\EmbeddableObject.cs" />
+    <Compile Include="Models\Photo.cs" />
+    <Compile Include="Models\PhotoSize.cs" />
     <Compile Include="Models\PostFormat.cs" />
     <Compile Include="Models\PostType.cs" />
+    <Compile Include="Models\TumblrAnswerPost.cs" />
+    <Compile Include="Models\TumblrAudioPost.cs" />
+    <Compile Include="Models\TumblrChatPost.cs" />
     <Compile Include="Models\TumblrFollowers.cs" />
+    <Compile Include="Models\TumblrLinkPost.cs" />
+    <Compile Include="Models\TumblrPhotoPost.cs" />
+    <Compile Include="Models\TumblrQuotePost.cs" />
+    <Compile Include="Models\TumblrTextPost.cs" />
+    <Compile Include="Models\TumblrVideoPost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Authentication\RequestToken.cs" />
     <Compile Include="Models\TumblrBlogInfo.cs" />
