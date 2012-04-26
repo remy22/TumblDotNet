@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TumblDotNet;
+using TumblDotNet.Models;
 
 namespace ConsoleTester
 {
@@ -46,7 +47,7 @@ namespace ConsoleTester
 
             var avatarUrl = client.GetAvatarUrl("danleech.com", 512);
 
-            var posts = client.GetPosts("danleech.com");
+            var posts = client.GetPosts("danleech.com",postType:PostType.Link);
 
 
             Console.WriteLine(avatarUrl);

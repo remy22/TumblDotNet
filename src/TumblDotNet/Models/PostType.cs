@@ -9,6 +9,7 @@ namespace TumblDotNet.Models
         Video,
         Audio,
         Photo,
+        Chat,
         All
     }
 }

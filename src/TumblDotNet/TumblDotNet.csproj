@@ -55,6 +55,7 @@
     <Compile Include="Models\TumblrFollowers.cs" />
     <Compile Include="Models\TumblrLinkPost.cs" />
     <Compile Include="Models\TumblrPhotoPost.cs" />
+    <Compile Include="Models\TumblrPost.cs" />
     <Compile Include="Models\TumblrQuotePost.cs" />
     <Compile Include="Models\TumblrTextPost.cs" />
     <Compile Include="Models\TumblrVideoPost.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Models\TumblrBlogInfo.cs" />
     <Compile Include="Responses\OAuthRequestTokenResponse.cs" />
     <Compile Include="Responses\TumblrBlogResponse.cs" />
+    <Compile Include="Responses\TumblrPostResponse.cs" />
     <Compile Include="Responses\TumblrPostsResponse.cs" />
     <Compile Include="TumblrAuthenticator.cs" />
     <Compile Include="TumblrClient.cs" />
@@ -73,6 +75,9 @@
     <Compile Include="Models\TumblrUserBlogInfo.cs" />
     <Compile Include="Models\TumblrUserInfo.cs" />
     <Compile Include="Responses\TumblrUserResponse.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

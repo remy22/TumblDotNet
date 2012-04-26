@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
@@ -157,7 +158,7 @@ namespace TumblDotNet
         }*/
 
         //TODO: Write some overloads for this
-        public TumblrPostsResponse GetPosts(string blogHostName, PostFormat format = PostFormat.Html, string filteredTag = "", bool includeReblogs = false, bool includeNotes = false, int offset = 0, int limit = 20, PostType postType = PostType.All )
+        public List<TumblrPost> GetPosts(string blogHostName, PostFormat format = PostFormat.Html, string filteredTag = "", bool includeReblogs = false, bool includeNotes = false, int offset = 0, int limit = 20, PostType postType = PostType.All )
         {
             if (String.IsNullOrEmpty(blogHostName))
                 throw new ArgumentException("invalid blog host name");
@@ -199,8 +200,6 @@ namespace TumblDotNet
             var resource = string.Format("/blog/{0}/posts{1}", blogHostName, typeUrl);
 
             var request = new RestRequest(resource);
-
-            
             
             request.AddParameter(new Parameter() { Name = "api_key", Type = ParameterType.GetOrPost, Value = ConsumerKey });
             request.AddParameter("limit", limit);
@@ -214,10 +213,45 @@ namespace TumblDotNet
 
             var response = client.Execute<TumblrResponse<TumblrPostsResponse>>(request);
 
-            //TODO: Take this catchall response and return a specific post type? 
-            return response.Data.Response;
+            List<TumblrPost> convertedPosts = new List<TumblrPost>();
 
+            foreach(var post in response.Data.Response.Posts)
+            {
+                switch(post.Type)
+                {
+                    case PostType.Text:
+                        convertedPosts.Add(post.ToTextPost());
+                        break;
+                    case PostType.Photo:
+                        convertedPosts.Add(post.ToPhotoPost());
+                        break;
+                    case PostType.Quote:
+                        convertedPosts.Add(post.ToQuotePost());
+                        break;
+                    case PostType.Link:
+                        convertedPosts.Add(post.ToLinkPost());
+                        break;
+                    case PostType.Chat:
+                        convertedPosts.Add(post.ToChatPost());
+                        break;
+                    case PostType.Audio:
+                        convertedPosts.Add(post.ToAudioPost());
+                        break;
+                    case PostType.Video:
+                        convertedPosts.Add(post.ToVideoPost());
+                        break;
+                    case PostType.Answer:
+                        convertedPosts.Add(post.ToAnswerPost());
+                        break;
+                }
+
+            }
+
+            return convertedPosts;
+            
         }
+
+
         #endregion
 
         #region Rest Setup
