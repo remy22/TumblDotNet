@@ -46,7 +46,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Authentication\RequestToken.cs" />
     <Compile Include="Models\TumblrBlogInfo.cs" />
+    <Compile Include="Responses\OAuthRequestTokenResponse.cs" />
     <Compile Include="Responses\TumblrBlogResponse.cs" />
+    <Compile Include="TumblrAuthenticator.cs" />
     <Compile Include="TumblrClient.cs" />
     <Compile Include="Models\TumblrFollower.cs" />
     <Compile Include="Responses\TumblrFollowersResponse.cs" />
