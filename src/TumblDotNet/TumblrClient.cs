@@ -83,7 +83,6 @@ namespace TumblDotNet
 
         public TumblrBlogInfo GetBlogInfo(string blogHostName)
         {
-
             if(String.IsNullOrEmpty(blogHostName))
                 throw new ArgumentException("invalid blog host name");
 
@@ -99,7 +98,6 @@ namespace TumblDotNet
             return response.Data.Response.Blog;
         }
 
-
         public string GetAvatarUrl(string blogHostName, int size=64)
         {
             List<int> supportedSizes = new List<int>() {16, 24, 30, 40, 48, 64, 96, 128, 512};
@@ -114,6 +112,67 @@ namespace TumblDotNet
             var resource = string.Format("{0}/blog/{1}/avatar/{2}",API_BASE, blogHostName,size);
 
             return resource;
+        }
+
+
+        //TODO: Write some overloads for this
+        public TumblrPostsResponse GetPosts(string blogHostName, PostFormat format = PostFormat.Html, string filteredTag = "", bool includeReblogs = false, bool includeNotes = false, int offset = 0, int limit = 20, PostType postType = PostType.All )
+        {
+            if (String.IsNullOrEmpty(blogHostName))
+                throw new ArgumentException("invalid blog host name");
+
+            var client = GetUnAuthenticatedRestClient();
+
+            string typeUrl = "";
+
+            switch (postType)
+            {
+                    case PostType.Text:
+                        typeUrl = "/text";
+                        break;
+                    case PostType.Quote:
+                        typeUrl = "/quote";
+                        break;
+                    case PostType.Link:
+                        typeUrl = "/link";
+                        break;
+                    case PostType.Audio:
+                        typeUrl = "/audio";
+                        break;
+                    case PostType.Video:
+                        typeUrl = "/video";
+                        break;
+                    case PostType.Answer:
+                        typeUrl = "/answer";
+                        break;
+                    case PostType.Photo:
+                        typeUrl = "/photo";
+                        break;
+                    default:
+                        typeUrl = "";
+                        break;
+
+            }
+                
+            //post type on end of url for this one
+            var resource = string.Format("/blog/{0}/posts{1}", blogHostName, typeUrl);
+
+            var request = new RestRequest(resource);
+            request.AddParameter(new Parameter() { Name = "api_key", Type = ParameterType.GetOrPost, Value = ConsumerKey });
+            request.AddParameter("limit", limit);
+            request.AddParameter("offset", offset);
+
+            if(filteredTag != "")
+                request.AddParameter("tag", filteredTag);
+
+            request.AddParameter("reblog_info", includeReblogs);
+            request.AddParameter("notes_info", includeNotes);
+
+            var response = client.Execute<TumblrResponse<TumblrPostsResponse>>(request);
+
+            //TODO: Take this catchall response and return a specific post type? 
+            return response.Data.Response;
+
         }
 
         #endregion
@@ -146,5 +205,6 @@ namespace TumblDotNet
         #endregion
     }
 
+    
 
 }

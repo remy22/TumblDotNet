@@ -36,11 +36,15 @@ namespace ConsoleTester
             var userInfo = client.GetUserInfo();
             Console.WriteLine(userInfo.Blogs[0].Name);
 
-            var blogInfo = client.GetBlogInfo("rcknight.tumblr.com");
+            var blogInfo = client.GetBlogInfo("danleech.com");
 
             Console.WriteLine(blogInfo.Title);
 
-            var avatarUrl = client.GetAvatarUrl("rcknight.tumblr.com", 512);
+            var avatarUrl = client.GetAvatarUrl("danleech.com", 512);
+
+            var posts = client.GetPosts("danleech.com");
+
+
             Console.WriteLine(avatarUrl);
             
             Console.ReadLine();

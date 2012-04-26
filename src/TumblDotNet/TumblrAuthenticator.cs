@@ -10,7 +10,6 @@ namespace TumblDotNet
 {
     public static class TumblrAuthenticator
     {
-
         private const string REQUEST_TOKEN_URL = "http://www.tumblr.com/oauth/request_token";
         private const string AUTHORIZE_URL = "http://www.tumblr.com/oauth/authorize";
         private const string ACCESS_TOKEN_URL = "http://www.tumblr.com/oauth/access_token";
